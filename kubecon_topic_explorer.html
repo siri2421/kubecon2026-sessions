@@ -95,35 +95,9 @@
       text-decoration: underline;
     }
 
-    /* Status Roadmap Pill */
-    .roadmap-banner {
-      background: rgba(50, 108, 229, 0.12);
-      border-bottom: 1px solid rgba(50, 108, 229, 0.3);
-      padding: 8px 16px;
-      font-size: 11px;
-      color: #93c5fd;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      line-height: 1.4;
-    }
-    .roadmap-dot {
-      width: 7px;
-      height: 7px;
-      background: #3b82f6;
-      border-radius: 999px;
-      flex-shrink: 0;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0% { opacity: 0.4; }
-      50% { opacity: 1; }
-      100% { opacity: 0.4; }
-    }
-
     /* Home Navigation Button */
     .home-nav-box {
-      padding: 10px 16px 6px;
+      padding: 12px 16px 8px;
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .home-btn {
@@ -309,7 +283,6 @@
     }
     .badge-keynote { background: rgba(50, 108, 229, 0.25); color: #93c5fd; border: 1px solid rgba(50, 108, 229, 0.4); }
     .badge-cat { background: rgba(56, 189, 248, 0.18); color: #38bdf8; }
-    .badge-words { background: rgba(52, 211, 153, 0.15); color: #34d399; }
     
     .card-actions {
       display: flex;
@@ -373,7 +346,7 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 26px 30px;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.3);
     }
     .hero-badge {
@@ -404,7 +377,7 @@
     }
     .hero-stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 12px;
     }
     .stat-card {
@@ -425,21 +398,6 @@
       color: var(--muted);
       text-transform: uppercase;
       font-weight: 600;
-    }
-
-    .notice-card {
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid #334155;
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      padding: 14px 18px;
-      margin-bottom: 24px;
-      font-size: 13px;
-      line-height: 1.5;
-      color: #cbd5e1;
-    }
-    .notice-card strong {
-      color: #fff;
     }
 
     .pillars-grid {
@@ -694,12 +652,6 @@
       </div>
     </div>
 
-    <!-- Live Status / Roadmap Pill -->
-    <div class="roadmap-banner">
-      <div class="roadmap-dot"></div>
-      <span><strong>Phase 1:</strong> All 35 Keynotes Published. Breakouts auto-expand as CNCF releases recordings.</span>
-    </div>
-
     <!-- Overview Nav Button -->
     <div class="home-nav-box">
       <button class="home-btn active" id="btnHome" onclick="selectHome()">
@@ -870,7 +822,7 @@
           <span class="hero-badge">☸️ Cloud Native Computing Foundation</span>
           <h1 class="hero-title">KubeCon + CloudNativeCon NA 2026: Keynote Systems Synthesis</h1>
           <p class="hero-subtitle">
-            An empirical, zero-boilerplate systems architecture synthesis of all <strong>35 keynote sessions</strong> delivered live at KubeCon NA 2026, synthesized from official CNCF video recordings, presentations, and spoken technical transcripts.
+            An empirical, zero-boilerplate systems architecture synthesis of all <strong>35 keynote sessions</strong> delivered live at KubeCon NA 2026, synthesized from official CNCF video recordings, presentations, and technical architecture sessions.
           </p>
 
           <div class="hero-stats">
@@ -879,8 +831,8 @@
               <div class="stat-lbl">Keynote Sessions</div>
             </div>
             <div class="stat-card">
-              <div class="stat-number">43K+</div>
-              <div class="stat-lbl">Words of Spoken Telemetry</div>
+              <div class="stat-number">6</div>
+              <div class="stat-lbl">Architectural Tracks</div>
             </div>
             <div class="stat-card">
               <div class="stat-number">40+</div>
@@ -891,10 +843,6 @@
               <div class="stat-lbl">Video Recordings Available</div>
             </div>
           </div>
-        </div>
-
-        <div class="notice-card">
-          <strong>📢 Continuous Playlist Populator Active:</strong> Keynotes and opening platform presentations are fully published and summarized with complete technical depth. As CNCF uploads and populates the breakout sessions, this portal will automatically expand to incorporate all conference track recordings.
         </div>
 
         <h2 style="font-size: 18px; font-weight: 800; color: #fff; margin: 0 0 14px;">
@@ -1053,7 +1001,6 @@
                   <div class="card-meta">
                     <span class="badge badge-keynote">☸️ Keynote</span>
                     <span class="badge badge-cat">${talk.topic}</span>
-                    ${talk.word_count > 0 ? `<span class="badge badge-words">${talk.word_count.toLocaleString()} words spoken</span>` : ''}
                     <span>🎤 <strong>${talk.speaker}</strong></span>
                     <span>🏢 ${talk.company}</span>
                   </div>
