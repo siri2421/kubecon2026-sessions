@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>KubeCon 2026 — Master Keynotes Explorer & Cloud Native Systems Architecture</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --sidebar-bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --sec-premise: #38bdf8;
+      --sec-arch: #a78bfa;
+      --sec-take: #34d399;
+      --badge-bg: #334155;
+      --pillar-bg: #131c31;
+      --kube-blue: #326ce5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #sidebar {
+      width: 380px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .sidebar-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.95);
+    }
+    .sidebar-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #38bdf8;
+      margin: 0 0 4px;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sidebar-sub {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Global Multi-Conference Switcher Banner */
+    .cross-conf-banner {
+      background: #182234;
+      padding: 8px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .cross-conf-label {
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .cross-conf-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cross-conf-link {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: color 0.15s ease;
+    }
+    .cross-conf-link:hover {
+      color: #7dd3fc;
+      text-decoration: underline;
+    }
+
+    /* Status Roadmap Pill */
+    .roadmap-banner {
+      background: rgba(50, 108, 229, 0.12);
+      border-bottom: 1px solid rgba(50, 108, 229, 0.3);
+      padding: 8px 16px;
+      font-size: 11px;
+      color: #93c5fd;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      line-height: 1.4;
+    }
+    .roadmap-dot {
+      width: 7px;
+      height: 7px;
+      background: #3b82f6;
+      border-radius: 999px;
+      flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
+    /* Home Navigation Button */
+    .home-nav-box {
+      padding: 10px 16px 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .home-btn {
+      width: 100%;
+      background: #1e293b;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+    }
+    .home-btn:hover {
+      background: #334155;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .home-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+    }
+    .home-icon { font-size: 18px; }
+    .home-meta { display: flex; flex-direction: column; }
+    .home-sub { font-size: 10px; font-weight: normal; color: var(--muted); }
+
+    .search-box {
+      padding: 8px 16px 10px;
+    }
+    .search-input {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+    .search-input:focus { border-color: var(--accent); }
+
+    .sidebar-section-title {
+      padding: 6px 18px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .topic-list {
+      overflow-y: auto;
+      flex: 1;
+      padding: 4px 0;
+    }
+    .topic-item {
+      padding: 9px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 12.5px;
+      color: #cbd5e1;
+      transition: all 0.15s ease;
+      border-left: 3px solid transparent;
+      user-select: none;
+    }
+    .topic-item:hover {
+      background: #1e293b;
+      color: var(--accent);
+    }
+    .topic-item.active {
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent);
+      font-weight: 700;
+      border-left-color: var(--accent);
+    }
+    .topic-badge {
+      background: #1e293b;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .topic-item.active .topic-badge {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent);
+    }
+
+    /* Main Area */
+    #main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 26px 36px 40px;
+    }
+    .header-bar {
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+    .topic-heading {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      margin: 0 0 6px;
+    }
+    .topic-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .stats-pill {
+      background: #1e293b;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    /* Keynote Cards */
+    .talk-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 22px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+      transition: border-color 0.2s;
+    }
+    .talk-card:hover {
+      border-color: #475569;
+    }
+    .card-header {
+      padding: 16px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      background: #1b263b;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .card-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 8px;
+      line-height: 1.35;
+    }
+    .card-meta {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--badge-bg);
+      color: #e2e8f0;
+    }
+    .badge-keynote { background: rgba(50, 108, 229, 0.25); color: #93c5fd; border: 1px solid rgba(50, 108, 229, 0.4); }
+    .badge-cat { background: rgba(56, 189, 248, 0.18); color: #38bdf8; }
+    .badge-words { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+    
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .video-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #dc2626;
+      color: white;
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: background 0.15s ease;
+    }
+    .video-btn:hover { background: #b91c1c; }
+
+    .card-body {
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      line-height: 1.65;
+      font-size: 13.5px;
+    }
+    .section-block {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 15px 18px;
+    }
+    .section-label {
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .label-premise { color: var(--sec-premise); }
+    .label-arch { color: var(--sec-arch); }
+    .label-take { color: var(--sec-take); }
+    .section-text {
+      color: #cbd5e1;
+      margin: 0;
+      line-height: 1.65;
+      white-space: pre-line;
+    }
+
+    /* Home Page View Styling */
+    .hero-banner {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 26px 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(50, 108, 229, 0.2);
+      color: #60a5fa;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      border: 1px solid rgba(50, 108, 229, 0.3);
+    }
+    .hero-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #fff;
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
+    }
+    .hero-subtitle {
+      font-size: 14px;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin: 0 0 20px;
+      max-width: 900px;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+    }
+    .stat-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 12px 14px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 3px;
+    }
+    .stat-lbl {
+      font-size: 10.5px;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .notice-card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid #334155;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #cbd5e1;
+    }
+    .notice-card strong {
+      color: #fff;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+    .pillar-card {
+      background: var(--pillar-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+    .pillar-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .pillar-icon { font-size: 20px; }
+    .pillar-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+    }
+    .pillar-text {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin: 0 0 14px;
+    }
+    .pillar-highlights {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .pillar-highlights ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .pillar-highlights li {
+      margin-bottom: 4px;
+    }
+
+    .topic-directory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .dir-card {
+      background: #1b263b;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dir-card:hover {
+      background: #243350;
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .dir-card-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    .dir-card-badge {
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.15);
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    /* Mobile Sticky Navigation Topbar */
+    .mobile-top-bar {
+      display: none;
+    }
+    .mobile-browse-btn-row {
+      display: none;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 820px) {
+      body {
+        height: auto;
+        min-height: 100dvh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        flex-direction: column;
+        -webkit-overflow-scrolling: touch;
+      }
+      #sidebar {
+        width: 100%;
+        min-height: 100dvh;
+        height: auto;
+        border-right: none;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+      }
+      .sidebar-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .search-box {
+        position: sticky;
+        top: 67px;
+        background: var(--sidebar-bg);
+        z-index: 40;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+      .topic-list {
+        overflow-y: visible;
+        flex: none;
+      }
+      #main {
+        display: none;
+        width: 100%;
+        min-height: 100dvh;
+        height: auto;
+        padding: 14px 16px 40px;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+      }
+      body.mobile-view-main #sidebar {
+        display: none !important;
+      }
+      body.mobile-view-main #main {
+        display: block !important;
+      }
+      .mobile-top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        position: sticky;
+        top: 0;
+        margin: -14px -16px 16px;
+        padding: 12px 16px;
+        background: rgba(15, 23, 42, 0.96);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+        z-index: 100;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      }
+      .mobile-nav-btn {
+        background: #1e293b;
+        color: #f1f5f9;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 8px 14px;
+        font-size: 13px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+      }
+      .mobile-nav-btn.primary {
+        background: rgba(56, 189, 248, 0.15);
+        color: var(--accent);
+        border-color: rgba(56, 189, 248, 0.4);
+      }
+      .mobile-browse-btn-row {
+        display: block;
+      }
+      .mobile-browse-tracks-btn {
+        width: 100%;
+        background: #1e293b;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+      }
+      .card-header {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .card-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .video-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .pillars-grid {
+        grid-template-columns: 1fr;
+      }
+      .topic-item {
+        padding: 14px 18px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile Sticky Top Bar (visible only in mobile-view-main) -->
+  <div class="mobile-top-bar" id="mobileTopBar">
+    <button class="mobile-nav-btn primary" onclick="switchToSidebarView()">
+      <span>←</span> All Tracks
+    </button>
+    <button class="mobile-nav-btn" onclick="navigateToHomeMobile()">
+      <span>🏠</span> Overview
+    </button>
+  </div>
+
+  <!-- Left Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">☸️ KubeCon 2026 Explorer</div>
+      <div class="sidebar-sub">Keynote Architecture Synthesis & Cloud Native Systems</div>
+    </div>
+
+    <!-- Global Cross-Summit Navigation Banner -->
+    <div class="cross-conf-banner">
+      <span class="cross-conf-label">Sister Summits:</span>
+      <div class="cross-conf-links">
+        <a href="https://siri2421.github.io/agentcon2026-sessions/" target="_blank" class="cross-conf-link">
+          🤖 AGNTCon ↗
+        </a>
+        <a href="https://siri2421.github.io/srecon2026-sessions/" target="_blank" class="cross-conf-link">
+          ⚡ SREcon ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- Live Status / Roadmap Pill -->
+    <div class="roadmap-banner">
+      <div class="roadmap-dot"></div>
+      <span><strong>Phase 1:</strong> All 35 Keynotes Published. Breakouts auto-expand as CNCF releases recordings.</span>
+    </div>
+
+    <!-- Overview Nav Button -->
+    <div class="home-nav-box">
+      <button class="home-btn active" id="btnHome" onclick="selectHome()">
+        <span class="home-icon">🏠</span>
+        <div class="home-meta">
+          <span>Conference Overview</span>
+          <span class="home-sub">6 Cloud Native Pillars & Keynotes Synthesis</span>
+        </div>
+      </button>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search 35 keynotes, speakers, runtimes..." oninput="onSearchChange()">
+    </div>
+
+    <div class="sidebar-section-title">
+      <span>Keynote Architectural Tracks</span>
+      <span id="totalVisibleTrackCount" style="font-weight:normal; font-size:10px;">6 Tracks</span>
+    </div>
+
+    <div class="topic-list" id="topicList">
+      <!-- Generated via JS -->
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div id="main">
+    <!-- Dynamic Content Rendered Here -->
+  </div>
+
+  <script>
+    const ALL_TALKS = [{"session_id": "HE4-Jb1CgNw", "title": "Sandbox Your Agents", "category": "AI Security, Sandboxing & Identity Governance", "topic": "AI Security, Sandboxing & Identity Governance", "type": "Keynote", "video_id": "HE4-Jb1CgNw", "recording_link": "https://www.youtube.com/watch?v=HE4-Jb1CgNw", "speaker": "Jessica Forrester", "company": "Red Hat", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "AI coding agents and autonomous workflow bots possess unprecedented privileges: executing shell commands, querying APIs, generating scripts, and mutating production repositories. Granting LLM agents direct shell execution within standard Linux containers exposes clusters to severe jailbreak exploits, prompt injection attacks, and host filesystem escapes.", "technical_depth": "Jessica Forrester (Red Hat) explores security architectures for agent containment:\n1. The Threat Vector: How adversarial prompt injection can manipulate an agent into reading mounted Kubernetes service account tokens, probing internal cluster DNS, or exfiltrating environment secrets.\n2. Multi-Layered Sandboxing: Enforcing strict defense-in-depth: user namespaces (UserNS), unprivileged seccomp profiles, read-only root filesystems, and hardware-virtualized microVM containers (Kata Containers / Confidential Containers).\n3. Network Perimeter Isolation: Enforcing Cilium NetworkPolicies and egress gateways that restrict agent network sockets strictly to authorized LLM API endpoints, blocking all lateral east-west cluster traffic.\n4. Ephemeral Workspace Destruction: Spawning single-use, throwaway container rootfs layers that are cryptographically shredded immediately upon task completion.", "takeaways": "\u2022 **Never Run Agents with Cluster-Scoped Service Accounts:** Scope tokens to the absolute minimum RBAC verbs; prevent agents from reading Secret objects or cluster-admin APIs.\n\u2022 **Enforce Hard Egress Filtering:** Agents should have zero access to internal cluster CIDRs or link-local cloud metadata endpoints (`169.254.169.254`).\n\u2022 **Hardware-Enforced Sandboxing Is Mandatory:** Container cgroups do not protect against kernel vulnerabilities; utilize Kata microVMs or gVisor for untrusted code execution.\n\u2022 **Audit Tool Invocations at the Gateway:** Intercept all agent tool calls through an authorization proxy before executing system-level actions.", "word_count": 747, "has_transcript": true}, {"session_id": "zTPrqUGyQLQ", "title": "Sovereign AI Starts at the Traffic Layer", "category": "AI Security, Sandboxing & Identity Governance", "topic": "AI Security, Sandboxing & Identity Governance", "type": "Keynote", "video_id": "zTPrqUGyQLQ", "recording_link": "https://www.youtube.com/watch?v=zTPrqUGyQLQ", "speaker": "Andjelko Iharos", "company": "HAProxy Technologies", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Cloud native teams spent a decade building traffic infrastructure they control: open source, decentralized, observable, and running on Kubernetes. Then AI arrived. Inference, the most sensitive layer in the stack, became a call to a vendor API. Your cluster is sovereign. Your AI isn't.", "technical_depth": "Andjelko Iharos (HAProxy Technologies) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nYou already run what's needed to reclaim that layer. An inference request is plain HTTP, with the model name in the JSON body. The ingress and Gateway API patterns in the cluster today can route and balance that traffic, and apply policy at the boundary. One data plane, instead of a fragmented traffic stack.\n\nThis session covers consistent-hashing across GPU backends and model-aware routing from request inspection, with inference staying inside the cluster. Everything runs on HAProxy, the open source, model-agnostic load balancer and ingress controller built for high throughput and low latency. You keep sovereign control of AI traffic with no performance penalty.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 637, "has_transcript": true}, {"session_id": "QyXPRV_bU4A", "title": "The Identity Crisis: Who is the AI Agent in Your Cluster?", "category": "AI Security, Sandboxing & Identity Governance", "topic": "AI Security, Sandboxing & Identity Governance", "type": "Keynote", "video_id": "QyXPRV_bU4A", "recording_link": "https://www.youtube.com/watch?v=QyXPRV_bU4A", "speaker": "Abdel Sghiouar", "company": "Google Cloud", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Kubernetes authentication is built around human users (OIDC, X.509 certificates) and service accounts for static workloads. Autonomous AI agents act on behalf of human developers, other agents, and automated pipelines simultaneously\u2014blurring accountability, breaking audit trails, and causing a crisis in Zero Trust cluster identity.", "technical_depth": "Abdel Sghiouar (Google Cloud) analyzes identity architecture in agentic Kubernetes:\n1. The Dual-Identity Dilemma: When an agent opens a pull request or mutates a Helm release, who is legally and operationally accountable\u2014the human who initiated the prompt, the agent runtime, or the platform service account?\n2. Ephemeral Workload Identity & Token Chaining: Implementing short-lived SPIFFE/SPIRE cryptographic identities that bind an agent's execution to both its human requester and its specific session context.\n3. Non-Repudiation in Audit Logs: Augmenting Kubernetes API server audit annotations (`x-agent-session-id`, `x-initiating-user`, `x-model-hash`) to preserve complete forensics for every automated mutation.\n4. Dynamic Step-Down Privileges: Restricting agents to read-only discovery during exploration phases, dynamically requesting step-up authorization only when proposing deployment changes.", "takeaways": "\u2022 **Preserve the Chain of Custody:** Never allow an agent to use a generic shared service account; tie every agent action cryptographically to the originating human user.\n\u2022 **Enforce Ephemeral Token Lifespans:** Issue tokens valid for minutes, not hours or days, to prevent stolen agent credentials from remaining active.\n\u2022 **Inject Model & Prompt Context into Audit Trails:** Standard K8s audit logs cannot explain why a change was made; capture model inference IDs in audit metadata.\n\u2022 **Separate Discovery from Execution:** Partition agents into discovery-only roles and require explicit human-in-the-loop signoff for production write operations.", "word_count": 1655, "has_transcript": true}, {"session_id": "pXgXv35I7Hs", "title": "Agent Substrate: Open Layers for Agentic Systems", "category": "Agentic AI, Agent Substrate & LLM Runtimes", "topic": "Agentic AI, Agent Substrate & LLM Runtimes", "type": "Keynote", "video_id": "pXgXv35I7Hs", "recording_link": "https://www.youtube.com/watch?v=pXgXv35I7Hs", "speaker": "Jaana Dogan, Google, Dmitry Berkovich, Google, Tim Hockin, Google, Eitan Yarmush, Solo.io & Luiz Scheidegger, Anthropic", "company": "Cloud Native Ecosystem", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Kubernetes was architected over 12 years ago for long-running, stateless, homogeneous container workloads. The explosive arrival of agentic AI\u2014autonomous multi-agent workflows executing hundreds of short-lived subtasks, dynamic sandboxing, and sub-second tool invocations\u2014breaks standard Pod scheduling and RPC latency boundaries. Running millions of agents requires an open, specialized substrate layer integrated directly with Kubernetes.", "technical_depth": "Tim Hockin (Google), Jaana Dogan (Google), Dmitry Berkovich (Google), Eitan Yarmush (Solo.io), and Luiz Scheidegger (Anthropic) unveil 'Agent Substrate':\n1. The Workload Mismatch: Traditional Kubernetes Pod lifecycle (image pull, CRI handshake, CNI network setup, readiness probe) takes seconds to tens of seconds; AI agent subtasks require sub-100ms startup and instantaneous teardown.\n2. Layered Architecture: Decoupling the agent execution environment into a multi-tier hierarchy: warm worker pools, ephemeral microVM execution cells, and shared memory context channels.\n3. Dynamic Context & Memory Sharing: Eliminating serialized network RPC hops between cooperating agents on the same node by introducing kernel-level zero-copy shared memory abstractions.\n4. Open Multi-Vendor Standard: Establishing an open industry specification between Google, Anthropic, and Solo.io so agents can run portably across any conforming Kubernetes cluster without proprietary vendor lock-in.", "takeaways": "\u2022 **Do Not Spin Up Standard Pods for Fleeting Subtasks:** Traditional pod initialization latency destroys real-time agent responsiveness; utilize pre-warmed execution worker pools.\n\u2022 **Zero-Copy Inter-Agent Context:** Passing large prompt contexts and tool call payloads across HTTP/REST inflates network bandwidth; leverage local node IPC and shared memory.\n\u2022 **Isolate Agent Sandboxes at the Kernel Level:** Autonomous agents executing arbitrary code require hardware-assisted microVM or gVisor isolation, not just container cgroups.\n\u2022 **Embrace Open Layer Standards:** Adopt Agent Substrate primitives to avoid fragmented proprietary runtime silos across cloud environments.", "word_count": 1551, "has_transcript": true}, {"session_id": "jmvXyFnIxeI", "title": "Agentic AI, Assembled in the Open", "category": "Agentic AI, Agent Substrate & LLM Runtimes", "topic": "Agentic AI, Agent Substrate & LLM Runtimes", "type": "Keynote", "video_id": "jmvXyFnIxeI", "recording_link": "https://www.youtube.com/watch?v=jmvXyFnIxeI", "speaker": "Jorge Palma", "company": "Microsoft", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Agentic AI is moving from experiments to production, and Kubernetes is a natural place to think about how these workloads are run. Let's look at how open source can provide a common platform layer for agentic systems, allowing frameworks, orchestrators, compute substrates, and identity infrastructure to come together behind declarative APIs. The goal is a more consistent way to deploy, schedule, secure, and observe AI agents using the cloud native model teams already know.", "technical_depth": "Jorge Palma (Microsoft) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nAgentic AI is moving from experiments to production, and Kubernetes is a natural place to think about how these workloads are run. Let's look at how open source can provide a common platform layer for agentic systems, allowing frameworks, orchestrators, compute substrates, and identity infrastructure to come together behind declarative APIs. The goal is a more consistent way to deploy, schedule, secure, and observe AI agents using the cloud native model teams already know.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1163, "has_transcript": true}, {"session_id": "IGwFVa8rIdg", "title": "Cloud Native Without Limits: What Can AI Agents Do for Us?", "category": "Agentic AI, Agent Substrate & LLM Runtimes", "topic": "Agentic AI, Agent Substrate & LLM Runtimes", "type": "Keynote", "video_id": "IGwFVa8rIdg", "recording_link": "https://www.youtube.com/watch?v=IGwFVa8rIdg", "speaker": "Lin Sun", "company": "Solo.io", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "In Amsterdam, we explored what cloud native could do with AI agents, MCP, and a drone controlled through natural language. Now it's time for Drone 2.", "technical_depth": "Lin Sun (Solo.io) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nWhat happens when AI agents become a natural part of the cloud native ecosystem? Imagine agents that can debug production issues, analyze token spending, automate routine operations, and even make us laugh, all while interacting with Kubernetes, cloud native tools, and MCP servers through natural language, with humans firmly in control.\n\nThis keynote explores what's possible when AI agents become trusted collaborators in cloud native. Through live demonstrations with Drone 2, we'll show how natural language and AI agents can transform the way we build, operate, and experience cloud native systems, pushing the boundaries of what's possible while keeping humans in control.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 2017, "has_transcript": true}, {"session_id": "LcNUDHEgtRk", "title": "Pods in the Wild: Reinforcement Learning on Kubernetes with OpenRL", "category": "Agentic AI, Agent Substrate & LLM Runtimes", "topic": "Agentic AI, Agent Substrate & LLM Runtimes", "type": "Keynote", "video_id": "LcNUDHEgtRk", "recording_link": "https://www.youtube.com/watch?v=LcNUDHEgtRk", "speaker": "Sunil Arora, Google & Ravin Kumar, Google Deepmind", "company": "Cloud Native Ecosystem", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "What do wild dolphins, open-weight Gemma models, and Kubernetes have in common?", "technical_depth": "Sunil Arora, Google & Ravin Kumar, Google Deepmind (Cloud Native Ecosystem) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nPods, of course!\n\nBy training DolphinGemma on decades of marine acoustic data, researchers are actively decoding dolphin communication. This reflects a broader industry shift: transformative AI pairs domain-specific open weights with specialized data. Far from replacing frontier models, winning architectures unite massive foundation LLMs for broad reasoning with lightweight, task-tuned models for targeted execution. While frontier models set the bar for general intelligence, the next major operational leap belongs to everyday builders: empowering practitioners to fine-tune open-weight models that outperform massive frontier baselines on domain-specific tasks at a fraction of the cost, footprint, and latency.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1597, "has_transcript": true}, {"session_id": "RfUsXJv2hY0", "title": "Scaling Multi-Modal Models and Computer-Use Agents on Kubernetes", "category": "Agentic AI, Agent Substrate & LLM Runtimes", "topic": "Agentic AI, Agent Substrate & LLM Runtimes", "type": "Keynote", "video_id": "RfUsXJv2hY0", "recording_link": "https://www.youtube.com/watch?v=RfUsXJv2hY0", "speaker": "Kai-Hsun Chen & Hao Jiang", "company": "Hark", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Hark builds multi-modal models and computer-use agents \u00e2\u0080\u0094 models that operate software the way a person does. Scaling them means running every kind of workload on the same infrastructure: multi-modal data processing, training, reinforcement learning, and inference serving.", "technical_depth": "Kai-Hsun Chen & Hao Jiang (Hark) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nAll of it runs on Ray, deployed and autoscaled by KubeRay. But Ray is not only our runtime \u00e2\u0080\u0094 it is also our resource management layer, with MultiKueue governing GPU capacity across every cluster we operate. This keynote covers how that fits together.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 564, "has_transcript": true}, {"session_id": "XedVUVRVXVM", "title": "The Harness Is the New Runtime", "category": "Agentic AI, Agent Substrate & LLM Runtimes", "topic": "Agentic AI, Agent Substrate & LLM Runtimes", "type": "Keynote", "video_id": "XedVUVRVXVM", "recording_link": "https://www.youtube.com/watch?v=XedVUVRVXVM", "speaker": "Idit Levine & Keith Babo", "company": "Solo.io", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "The fundamental unit of cloud native deployment has evolved: in 2014 it was the container; in 2018 it was the Kubernetes service. In 2026, the atomic runtime unit is 'The Harness'\u2014a unified, intelligent abstraction combining LLM orchestration, model routing, policy guardrails, and deterministic tool execution into a cohesive runtime fabric.", "technical_depth": "Idit Levine and Keith Babo (Solo.io) introduce the architectural paradigm of the AI Harness:\n1. Beyond the Service Mesh: Extending traditional L7 service mesh (Istio/Envoy) into an intelligent 'AI Gateway & Harness' that understands prompt tokens, embedding caching, semantic rate limiting, and model fallback routing.\n2. Semantic Observability: Tracking token velocity, prompt drift, and LLM latency percentiles alongside standard HTTP status codes and Golden Signals.\n3. Dynamic Tool Protocol (MCP) Integration: Integrating the Model Context Protocol (MCP) directly into the gateway proxy, allowing agents to discover and invoke cluster microservices securely via declarative OpenAPI schemas.\n4. Zero Trust Policy Enforcement: Enforcing prompt validation, PII redaction, and semantic jailbreak filters directly at the ingress proxy layer before requests reach downstream models.", "takeaways": "\u2022 **Move LLM Guardrails to the Traffic Gateway:** Application-level prompt filtering is fragile; enforce PII redaction and policy validation at the ingress proxy.\n\u2022 **Implement Semantic Caching:** Caching identical or highly similar prompt embeddings at the gateway cuts inference costs and latency by over 50%.\n\u2022 **Standardize Tool Discovery via MCP:** Expose internal Kubernetes microservices to agents using standardized MCP tool definitions rather than ad-hoc custom wrappers.\n\u2022 **Model Fallback Routing Prevents Outages:** When frontier models experience regional cloud brownouts, the gateway should autonomously reroute to local open weights models.", "word_count": 1344, "has_transcript": true}, {"session_id": "BKEeT80_HTE", "title": "Autonomous Orchestration for AI Infrastructure", "category": "Cluster Engineering, Massive Scale & GPU Orchestration", "topic": "Cluster Engineering, Massive Scale & GPU Orchestration", "type": "Keynote", "video_id": "BKEeT80_HTE", "recording_link": "https://www.youtube.com/watch?v=BKEeT80_HTE", "speaker": "Yodar Shafrir", "company": "ScaleOps", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Enterprise AI never sits still. Thousands of agents, tools, models, and applications spike, idle, scale, and redeploy every minute, each with its own needs, each affecting the others. Managing production AI infrastructure manually has become impossible. The answer is infrastructure that runs autonomously, and that depends on real-time context: knowing how each workload behaves, what it needs, and what it talks to before any action is taken.", "technical_depth": "Yodar Shafrir (ScaleOps) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nYodar Shafrir shows how context, from a single workload to the whole system, becomes autonomous orchestration that keeps enterprise AI reliable and performant, and puts platform teams in command of the system instead of chasing it.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1071, "has_transcript": true}, {"session_id": "LwMcS2paZdw", "title": "Building the Next Generation of AI with Open Source", "category": "Cluster Engineering, Massive Scale & GPU Orchestration", "topic": "Cluster Engineering, Massive Scale & GPU Orchestration", "type": "Keynote", "video_id": "LwMcS2paZdw", "recording_link": "https://www.youtube.com/watch?v=LwMcS2paZdw", "speaker": "Warren Barkley & Ali Golshan", "company": "NVIDIA", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Join us to hear how NVIDIA is deepening its commitment to open source and working alongside the Kubernetes community to build the future of AI Factories\u00e2\u0080\u0094together. We\u00e2\u0080\u0099ll share how an open, community-driven approach is helping make accelerated computing easier to build, operate, and scale.", "technical_depth": "Warren Barkley & Ali Golshan (NVIDIA) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nJoin us to hear how NVIDIA is deepening its commitment to open source and working alongside the Kubernetes community to build the future of AI Factories\u00e2\u0080\u0094together. We\u00e2\u0080\u0099ll share how an open, community-driven approach is helping make accelerated computing easier to build, operate, and scale.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 880, "has_transcript": true}, {"session_id": "L2BC62mAliw", "title": "Engineering Kubernetes for the Next Era of Workloads", "category": "Cluster Engineering, Massive Scale & GPU Orchestration", "topic": "Cluster Engineering, Massive Scale & GPU Orchestration", "type": "Keynote", "video_id": "L2BC62mAliw", "recording_link": "https://www.youtube.com/watch?v=L2BC62mAliw", "speaker": "Mike Stefaniak", "company": "AWS", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Modern AI training and inference architectures stress Kubernetes beyond its original design boundaries: container images have ballooned from megabytes to 50+ gigabytes, cluster node counts approach 100,000, and clusters must coordinate tens of thousands of tightly coupled GPUs across UltraClusters without single-node failures stalling entire distributed training jobs.", "technical_depth": "Mike Stefaniak (AWS) breaks down the engineering upgrades powering next-generation Kubernetes clusters:\n1. Extreme Scale Image Streaming: Transitioning from blocking image pulls to lazy-loading via eStargz and Seekable OCI (SOCI), allowing multi-gigabyte PyTorch containers to start executing in seconds before full layers are downloaded.\n2. Control Plane Scaling: Re-architecting etcd and kube-apiserver with priority and fairness queues, event streaming sharding, and cached informers to survive millions of concurrent watch events.\n3. Topology-Aware GPU Scheduling: Co-designing node allocators with physical datacenter network fabrics (AWS EFA, RoCEv2) to schedule distributed training pods strictly within minimal latency leaf-spine switch domains.\n4. Automated Health Healing & Gang Scheduling: Integrating Kueue and Coscheduling plugins to ensure distributed AI jobs only start when 100% of required GPU gang nodes are healthy, avoiding deadlocks.", "takeaways": "\u2022 **Adopt Lazy Container Loading:** Lazy-loading large AI images via SOCI reduces pod startup times from 15 minutes to under 10 seconds.\n\u2022 **Topology-Aware Placement Prevents GPU Starvation:** Distributed all-reduce training degrades by 40% if pods span across non-optimal network fabric switches.\n\u2022 **Implement Strict Gang Scheduling:** If 1 of 512 GPU pods fails to schedule, immediately unschedule the remaining 511 to prevent idling expensive GPU capacity.\n\u2022 **Tune Control Plane Priority and Fairness:** Safeguard critical system controllers from being starved by massive batch job submission floods.", "word_count": 756, "has_transcript": true}, {"session_id": "J_LdxrqP9yA", "title": "Kubeflow Graduation: Powering the Next Era of Cloud Native AI With an Open Community", "category": "Cluster Engineering, Massive Scale & GPU Orchestration", "topic": "Cluster Engineering, Massive Scale & GPU Orchestration", "type": "Keynote", "video_id": "J_LdxrqP9yA", "recording_link": "https://www.youtube.com/watch?v=J_LdxrqP9yA", "speaker": "Ron Kahn, NVIDIA, Andrey Velichkevich, Apple, Vara Bonthu, AWS, Ekin Karabulut, NVIDIA & Manabu McCloskey, AWS", "company": "Cloud Native Ecosystem", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Since 2017, Kubeflow has evolved from a TensorFlow controller into a Cloud Native AI platform comprising eleven full-fledged projects, used by thousands of organizations across the AI lifecycle. Today, we are excited to celebrate Kubeflow\u00e2\u0080\u0099s Graduation from the CNCF \u00e2\u0080\u0093 and the open community that made this journey possible.", "technical_depth": "Ron Kahn, NVIDIA, Andrey Velichkevich, Apple, Vara Bonthu, AWS, Ekin Karabulut, NVIDIA & Manabu McCloskey, AWS (Cloud Native Ecosystem) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nThis keynote explores real-world stories from our users, showing how an open, vendor-neutral community is pushing the boundaries of Data & AI infrastructure across the whole AI lifecycle. It will highlight large-scale distributed training with Kubeflow Trainer and MPI, and look ahead to the agentic era with innovations such as the Semantic Operator. By bringing governed semantic APIs to Kubernetes, the Semantic Operator enables AI agents, applications, and BI tools to work with trusted business definitions without relying on LLM-generated SQL. Together, these efforts illustrate how the Kubeflow community is building the foundations for the next decade of Cloud Native AI.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1287, "has_transcript": true}, {"session_id": "uMDLieiXncE", "title": "Production AI on Kubernetes: Built to Scale with Oracle Cloud", "category": "Cluster Engineering, Massive Scale & GPU Orchestration", "topic": "Cluster Engineering, Massive Scale & GPU Orchestration", "type": "Keynote", "video_id": "uMDLieiXncE", "recording_link": "https://www.youtube.com/watch?v=uMDLieiXncE", "speaker": "Lorenzo Biava, LiveKit & Jeff Hoffman, Oracle", "company": "Cloud Native Ecosystem", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Kubernetes is the foundation of the next generation of AI. Moving from experimentation to a production requires infrastructure designed for scale, performance and simplicity. In this keynote, Oracle Cloud Infrastructure (OCI) will explore how OCI Kubernetes Engine (OKE) enables organization to build and run demanding cloud-native and AI/ML workloads on an open, enterprise-ready platform.", "technical_depth": "Lorenzo Biava, LiveKit & Jeff Hoffman, Oracle (Cloud Native Ecosystem) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nJoin Jeff Hoffman, VP of Container Services at Oracle, to hear how customers are using OKE to bring AI initiatives into production. Learn how OCI\u00e2\u0080\u0099s Kubernetes platform, high-performance infrastructure, and open-source ecosystem help teams innovate faster while maintaining the control and reliability their critical workloads require.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1148, "has_transcript": true}, {"session_id": "AFLeIqNG028", "title": "Standardized Yet Adaptable: How Nutanix is Evolving Cluster API with CAREN", "category": "Cluster Engineering, Massive Scale & GPU Orchestration", "topic": "Cluster Engineering, Massive Scale & GPU Orchestration", "type": "Keynote", "video_id": "AFLeIqNG028", "recording_link": "https://www.youtube.com/watch?v=AFLeIqNG028", "speaker": "Deepak Goel", "company": "Nutanix Inc", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Cloud native innovation has always been driven by the community. From Mesosphere's role as a CNCF founding member to D2iQ's continued Kubernetes leadership and now Nutanix's active contributions across multiple CNCF projects, the mission has remained the same: build together in the open.In this session, we'll revisit that journey and explore how those experiences led to CAREN (Cluster API Runtime Extensions - Nutanix), an extensible framework that enables dynamic cluster configuration and lifecycle management while preserving the simplicity and consistency of Cluster API's declarative model. As we look to the future of Kubernetes fleet management, standardization via Cluster API (CAPI) and the ClusterClass feature has brought immense consistency to cluster provisioning. However, real-world enterprise deployments often hit a wall: they require dynamic customization that strict standardization struggles to accommodate.CAREN bridges the critical gap between strict declarative blueprints and real-world adaptability. By leveraging CAPI's runtime mutation hooks, CAREN dynamically configures and manages Kubernetes clusters without ever needing to fork or touch the base ClusterClass. It empowers platform engineering teams to deliver standardized, yet infinitely adaptable Kubernetes clusters.", "technical_depth": "Deepak Goel (Nutanix Inc) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nCloud native innovation has always been driven by the community. From Mesosphere's role as a CNCF founding member to D2iQ's continued Kubernetes leadership and now Nutanix's active contributions across multiple CNCF projects, the mission has remained the same: build together in the open.In this session, we'll revisit that journey and explore how those experiences led to CAREN (Cluster API Runtime Extensions - Nutanix), an extensible framework that enables dynamic cluster configuration and lifecycle management while preserving the simplicity and consistency of Cluster API's declarative model. As we look to the future of Kubernetes fleet management, standardization via Cluster API (CAPI) and the ClusterClass feature has brought immense consistency to cluster provisioning. However, real-world enterprise deployments often hit a wall: they require dynamic customization that strict standardization struggles to accommodate.CAREN bridges the critical gap between strict declarative blueprints and real-world adaptability. By leveraging CAPI's runtime mutation hooks, CAREN dynamically configures and manages Kubernetes clusters without ever needing to fork or touch the base ClusterClass. It empowers platform engineering teams to deliver standardized, yet infinitely adaptable Kubernetes clusters.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 747, "has_transcript": true}, {"session_id": "aDOBBi2NB6Y", "title": "A Tribute to Open Source", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "aDOBBi2NB6Y", "recording_link": "https://www.youtube.com/watch?v=aDOBBi2NB6Y", "speaker": "Lucy Sweet", "company": "Anthropic", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Keynote presentation on A Tribute to Open Source delivered live at KubeCon + CloudNativeCon North America 2026.", "technical_depth": "Lucy Sweet (Anthropic) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nKeynote presentation on A Tribute to Open Source delivered live at KubeCon + CloudNativeCon North America 2026.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 399, "has_transcript": true}, {"session_id": "ElAAj0p_T7g", "title": "Adyen Joins CNCF: Staying Independent with Open Source", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "ElAAj0p_T7g", "recording_link": "https://www.youtube.com/watch?v=ElAAj0p_T7g", "speaker": "Juliano Martinez", "company": "Adyen", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Global Fintech Adyen processed \u00e2\u0082\u00ac1.39 trillion in 2025 for businesses around the world on infrastructure it built and runs itself. Principal Engineer Juliano Martinez shares why Adyen is joining CNCF as a Platinum End User, and why open, vendor-neutral technology lets a global payments platform stay in charge of its stack and its data. He also introduces kubectl-rexec, Adyen's open source tool for auditable Kubernetes access in regulated environments.", "technical_depth": "Juliano Martinez (Adyen) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nGlobal Fintech Adyen processed \u00e2\u0082\u00ac1.39 trillion in 2025 for businesses around the world on infrastructure it built and runs itself. Principal Engineer Juliano Martinez shares why Adyen is joining CNCF as a Platinum End User, and why open, vendor-neutral technology lets a global payments platform stay in charge of its stack and its data. He also introduces kubectl-rexec, Adyen's open source tool for auditable Kubernetes access in regulated environments.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 754, "has_transcript": true}, {"session_id": "mit5xE4EBgc", "title": "Beyond End User: CAP and the Evolution of Open Source at CVS Health", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "mit5xE4EBgc", "recording_link": "https://www.youtube.com/watch?v=mit5xE4EBgc", "speaker": "Michael Amundson & Jim Beyers", "company": "CVS Health", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Two years ago, the DevEx organization at CVS Health set an audacious plan in motion: build a platform capable of running the company\u00e2\u0080\u0099s thousands of existing applications while remaining approachable enough that someone joining the company could ship a new application on their very first day. To make this work, we knew we would need to leverage many of the incredible open source projects across the CNCF landscape. But we also knew that achieving our goal would require software we\u00e2\u0080\u0099d have to build: a meta control plane that could weave these projects together into a single streamlined platform. We call the platform CAP and we\u00e2\u0080\u0099re excited to share its design, show a brief demo, and talk about our transition from end user to open source maintainer and contributor as CAP evolves from an internal platform to a brand new open source project.", "technical_depth": "Michael Amundson & Jim Beyers (CVS Health) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nTwo years ago, the DevEx organization at CVS Health set an audacious plan in motion: build a platform capable of running the company\u00e2\u0080\u0099s thousands of existing applications while remaining approachable enough that someone joining the company could ship a new application on their very first day. To make this work, we knew we would need to leverage many of the incredible open source projects across the CNCF landscape. But we also knew that achieving our goal would require software we\u00e2\u0080\u0099d have to build: a meta control plane that could weave these projects together into a single streamlined platform. We call the platform CAP and we\u00e2\u0080\u0099re excited to share its design, show a brief demo, and talk about our transition from end user to open source maintainer and contributor as CAP evolves from an internal platform to a brand new open source project.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1033, "has_transcript": true}, {"session_id": "b5wHNcIUjvw", "title": "Celebrating the People Who Make Cloud Native Possible", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "b5wHNcIUjvw", "recording_link": "https://www.youtube.com/watch?v=b5wHNcIUjvw", "speaker": "Jorge Castro", "company": "Cloud Native Computing Foundation", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Behind every project, release and community milestone are people doing the work that keeps cloud native moving forward. The CNCF Community Awards recognize individuals whose technical contributions, sustained leadership and often unseen work have made an exceptional impact on the cloud native community. Join us as we celebrate community members across four awards, recognizing the many ways people contribute to building and sustaining cloud native technologies.", "technical_depth": "Jorge Castro (Cloud Native Computing Foundation) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nBehind every project, release and community milestone are people doing the work that keeps cloud native moving forward. The CNCF Community Awards recognize individuals whose technical contributions, sustained leadership and often unseen work have made an exceptional impact on the cloud native community. Join us as we celebrate community members across four awards, recognizing the many ways people contribute to building and sustaining cloud native technologies.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 533, "has_transcript": true}, {"session_id": "cFhUJmt0MSE", "title": "Closing Remarks", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "cFhUJmt0MSE", "recording_link": "https://www.youtube.com/watch?v=cFhUJmt0MSE", "speaker": "CNCF Community", "company": "Cloud Native Computing Foundation", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Keynote presentation on Closing Remarks delivered live at KubeCon + CloudNativeCon North America 2026.", "technical_depth": "CNCF Community (Cloud Native Computing Foundation) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nKeynote presentation on Closing Remarks delivered live at KubeCon + CloudNativeCon North America 2026.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 138, "has_transcript": true}, {"session_id": "kRt1HYWmVpU", "title": "Closing Remarks", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "kRt1HYWmVpU", "recording_link": "https://www.youtube.com/watch?v=kRt1HYWmVpU", "speaker": "CNCF Community", "company": "Cloud Native Computing Foundation", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Keynote presentation on Closing Remarks delivered live at KubeCon + CloudNativeCon North America 2026.", "technical_depth": "CNCF Community (Cloud Native Computing Foundation) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nKeynote presentation on Closing Remarks delivered live at KubeCon + CloudNativeCon North America 2026.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 103, "has_transcript": true}, {"session_id": "KhdpMGNp25U", "title": "Closing Remarks", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "KhdpMGNp25U", "recording_link": "https://www.youtube.com/watch?v=KhdpMGNp25U", "speaker": "CNCF Community", "company": "Cloud Native Computing Foundation", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Keynote presentation on Closing Remarks delivered live at KubeCon + CloudNativeCon North America 2026.", "technical_depth": "CNCF Community (Cloud Native Computing Foundation) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nKeynote presentation on Closing Remarks delivered live at KubeCon + CloudNativeCon North America 2026.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 536, "has_transcript": true}, {"session_id": "n0NVFw0O28s", "title": "Cloud Native: Built by Humans, Engineered to Evolve", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "n0NVFw0O28s", "recording_link": "https://www.youtube.com/watch?v=n0NVFw0O28s", "speaker": "Jeffrey Sica", "company": "CNCF", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Cloud native has never stood still. As workloads, infrastructure and the way we build software change, an open ecosystem of projects and people gives us the ability to evolve with them. Jeffrey Sica will give a look at how the breadth of the cloud native landscape and the strength of its community are helping us adapt to AI, increasingly specialized infrastructure and whatever comes next.", "technical_depth": "Jeffrey Sica (CNCF) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nCloud native has never stood still. As workloads, infrastructure and the way we build software change, an open ecosystem of projects and people gives us the ability to evolve with them. Jeffrey Sica will give a look at how the breadth of the cloud native landscape and the strength of its community are helping us adapt to AI, increasingly specialized infrastructure and whatever comes next.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1960, "has_transcript": true}, {"session_id": "cqwKzInzpLA", "title": "Human Scale, Agent Scale", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "cqwKzInzpLA", "recording_link": "https://www.youtube.com/watch?v=cqwKzInzpLA", "speaker": "Jonathan Bryce", "company": "The Linux Foundation", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Keynote presentation on Human Scale, Agent Scale delivered live at KubeCon + CloudNativeCon North America 2026.", "technical_depth": "Jonathan Bryce (The Linux Foundation) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nKeynote presentation on Human Scale, Agent Scale delivered live at KubeCon + CloudNativeCon North America 2026.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1519, "has_transcript": true}, {"session_id": "0d_2sKj4rlU", "title": "The Cloud Native Feedback Loop: How End Users and Developers Drive CNCF Projects Forward", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "0d_2sKj4rlU", "recording_link": "https://www.youtube.com/watch?v=0d_2sKj4rlU", "speaker": "Marlow Warnicke, NVIDIA, Brandt Keller, Defense Unicorns, Alolita Sharma, Apple & Daniel Moch, Lockheed Martin", "company": "Cloud Native Ecosystem", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "How do today\u00e2\u0080\u0099s reference architectures become real production platforms built on CNCF projects that evolve, mature, and earn long-term trust? In this joint keynote the CNCF End User Technical Advisory Board (TAB) and Technical Oversight Committee (TOC) - with representation from the TAB User Groups and TOC Technical Advisory Groups - cover the mapping reference architectures and real-world production needs to the project lifecycle decisions that shape the CNCF ecosystem. Along the way they connect this technical and governance journey to the data and tools that support smarter decisions at scale by showcasing User Group and Technical Advisory Group Initiatives, as well as LFX and LF Insights metrics.", "technical_depth": "Marlow Warnicke, NVIDIA, Brandt Keller, Defense Unicorns, Alolita Sharma, Apple & Daniel Moch, Lockheed Martin (Cloud Native Ecosystem) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nHow do today\u00e2\u0080\u0099s reference architectures become real production platforms built on CNCF projects that evolve, mature, and earn long-term trust? In this joint keynote the CNCF End User Technical Advisory Board (TAB) and Technical Oversight Committee (TOC) - with representation from the TAB User Groups and TOC Technical Advisory Groups - cover the mapping reference architectures and real-world production needs to the project lifecycle decisions that shape the CNCF ecosystem. Along the way they connect this technical and governance journey to the data and tools that support smarter decisions at scale by showcasing User Group and Technical Advisory Group Initiatives, as well as LFX and LF Insights metrics.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1609, "has_transcript": true}, {"session_id": "sNUwrrRLZG8", "title": "The Flywheel Effect: Why Community Is the Ultimate End-User Advantage", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "sNUwrrRLZG8", "recording_link": "https://www.youtube.com/watch?v=sNUwrrRLZG8", "speaker": "Abby Bangser, Syntasso & Phill Morton, The Access Group", "company": "Cloud Native Ecosystem", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Cloud native promises a future without limits, but every end-user organization eventually discovers the same truth: no team becomes limitless alone.", "technical_depth": "Abby Bangser, Syntasso & Phill Morton, The Access Group (Cloud Native Ecosystem) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nEvery day, end users push CNCF projects into new industries, at new scales, and with entirely new challenges. They uncover new patterns, expose new edge cases, and find better ways to build. By sharing those experiences back with the community through talks, bug reports, reference architectures, and open collaboration, they create a flywheel where every contribution accelerates the next innovation. The result is a community where shared experience helps everyone solve problems faster, see around corners, and innovate with greater confidence.\n\nTogether, Phill Morton and Abby Bangser will explore how end-user experience and community leadership fuel that flywheel. Through the upcoming Platform Engineering Community White Paper and a live demonstration of an enterprise AI platform built on those same principles, they\u00e2\u0080\u0099ll show how community ideas translate into real-world impact, enabling thousands of non-engineers to build at the speed of agents.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 2328, "has_transcript": true}, {"session_id": "CUIXs2oZLMY", "title": "Welcome + Opening Remarks", "category": "Community, Open Source Governance & Keynote Addresses", "topic": "Community, Open Source Governance & Keynote Addresses", "type": "Keynote", "video_id": "CUIXs2oZLMY", "recording_link": "https://www.youtube.com/watch?v=CUIXs2oZLMY", "speaker": "Jonathan Bryce, The Linux Foundation, Chris Aniszczyk, The Linux Foundation, Robert Nishihara, Anyscale, Rita Zhang, CoreWeave, Kevin Cochrane, Vultr & Bassam Tabbara, Upbound", "company": "Cloud Native Ecosystem", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Keynote presentation on Welcome + Opening Remarks delivered live at KubeCon + CloudNativeCon North America 2026.", "technical_depth": "Jonathan Bryce, The Linux Foundation, Chris Aniszczyk, The Linux Foundation, Robert Nishihara, Anyscale, Rita Zhang, CoreWeave, Kevin Cochrane, Vultr & Bassam Tabbara, Upbound (Cloud Native Ecosystem) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nKeynote presentation on Welcome + Opening Remarks delivered live at KubeCon + CloudNativeCon North America 2026.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 7701, "has_transcript": true}, {"session_id": "YgsEhRPQ7SE", "title": "Built on Kubernetes. Proven at Uber Scale. Now Open Source.", "category": "GitOps, Platform Engineering & Production Scale", "topic": "GitOps, Platform Engineering & Production Scale", "type": "Keynote", "video_id": "YgsEhRPQ7SE", "recording_link": "https://www.youtube.com/watch?v=YgsEhRPQ7SE", "speaker": "Viv Keswani", "company": "Uber", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Uber announces the open sourcing of Michelangelo AI, its Kubernetes-native ML platform designed to run across on-premises and public cloud environments, powering mission-critical AI across its global business.", "technical_depth": "Viv Keswani (Uber) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nBattle-tested for nearly a decade, Michelangelo powers everything from traditional ML models to advanced generative AI and agentic workflows, supporting over 5,000 production models and 45 million predictions per second.\n\nNow, we're opening up the platform behind Uber's AI innovation to developers everywhere, with the goal of building an ecosystem where we can all innovate faster, together.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 482, "has_transcript": true}, {"session_id": "GOQn0zRLVA4", "title": "From Pod to Actuator: Physical AI and the Future of Kubernetes", "category": "GitOps, Platform Engineering & Production Scale", "topic": "GitOps, Platform Engineering & Production Scale", "type": "Keynote", "video_id": "GOQn0zRLVA4", "recording_link": "https://www.youtube.com/watch?v=GOQn0zRLVA4", "speaker": "CNCF Community", "company": "Cloud Native Computing Foundation", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Keynote presentation on From Pod to Actuator: Physical AI and the Future of Kubernetes delivered live at KubeCon + CloudNativeCon North America 2026.", "technical_depth": "CNCF Community (Cloud Native Computing Foundation) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nKeynote presentation on From Pod to Actuator: Physical AI and the Future of Kubernetes delivered live at KubeCon + CloudNativeCon North America 2026.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1194, "has_transcript": true}, {"session_id": "aWVHmNKKqj0", "title": "Kubernetes with Conviction: How Customization is Shaping the OSS AI Ecosystem's Future", "category": "GitOps, Platform Engineering & Production Scale", "topic": "GitOps, Platform Engineering & Production Scale", "type": "Keynote", "video_id": "aWVHmNKKqj0", "recording_link": "https://www.youtube.com/watch?v=aWVHmNKKqj0", "speaker": "Jago Macleod (Google) & Shaun Hopper (Meta)", "company": "Google & Meta", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Just as the Linux ecosystem thrives by separating a universal, low-level kernel from rich distributions, Kubernetes is evolving. Customization through CRDs, extension APIs, and specialized AI schedulers allows hyperscalers like Google and Meta to shape open source infrastructure without fragmenting the core control plane.", "technical_depth": "Jago Macleod (Google) & Shaun Hopper (Meta) (Google & Meta) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nJust as the Linux ecosystem thrives by separating a universal, low-level kernel from rich distributions, Kubernetes is evolving. Customization through CRDs, extension APIs, and specialized AI schedulers allows hyperscalers like Google and Meta to shape open source infrastructure without fragmenting the core control plane.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1366, "has_transcript": true}, {"session_id": "AQkYcANxEtY", "title": "Salesforce Runs on Heroku: How We Empower Every Builder at Cloud Native Scale", "category": "GitOps, Platform Engineering & Production Scale", "topic": "GitOps, Platform Engineering & Production Scale", "type": "Keynote", "video_id": "AQkYcANxEtY", "recording_link": "https://www.youtube.com/watch?v=AQkYcANxEtY", "speaker": "Brandon Schoen (Heroku) & Shiva Nimmagadda (Salesforce)", "company": "Salesforce / Heroku", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Salesforce is Heroku's largest customer with over 20,000 internal applications. This keynote explains how Salesforce scaled internal developer velocity by bridging Heroku's developer ergonomics with Kubernetes-backed cloud native compute primitives at hyper-scale.", "technical_depth": "Brandon Schoen (Heroku) & Shiva Nimmagadda (Salesforce) (Salesforce / Heroku) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nSalesforce is Heroku's largest customer with over 20,000 internal applications. This keynote explains how Salesforce scaled internal developer velocity by bridging Heroku's developer ergonomics with Kubernetes-backed cloud native compute primitives at hyper-scale.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 473, "has_transcript": true}, {"session_id": "UDDRhFgAE9Y", "title": "We Have GitOps at Home: How Meta Went from Terraform on Cron to GitOps for AI Infra", "category": "GitOps, Platform Engineering & Production Scale", "topic": "GitOps, Platform Engineering & Production Scale", "type": "Keynote", "video_id": "UDDRhFgAE9Y", "recording_link": "https://www.youtube.com/watch?v=UDDRhFgAE9Y", "speaker": "Phong Nguyen & Shaun Hopper", "company": "Meta Platforms", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Managing ~100 production Kubernetes clusters powering Meta's massive AI research infrastructure was initially handled via 'Terraform on cron'\u2014a fragile, high-toil setup plagued by configuration drift, slow convergence, and frequent merge conflicts across dozens of AI infrastructure squads.", "technical_depth": "Phong Nguyen and Shaun Hopper (Meta Platforms) detail Meta's migration to cloud-native GitOps:\n1. The Failure of Terraform on Cron: Periodic scheduled Terraform runs caused massive API throttling against cloud providers, lacked real-time state reconciliation, and left broken states undetected between cron intervals.\n2. Implementing In-Cluster Reconcilers: Deploying declarative GitOps controllers directly inside each cluster, continuously comparing git repository state against live Kubernetes API states.\n3. Hierarchical Fleet Configuration: Partitioning cluster manifests into layered overlays (Global Base, Regional Hardware Topology, AI Research Group Profiles) using modular customization engines.\n4. Safe Staged Rollouts & Canary Validation: Gating cluster upgrades through automated multi-wave rollouts, continuously validating GPU health telemetry and synthetic training jobs before advancing across the fleet.", "takeaways": "\u2022 **Terraform on Cron Is Not GitOps:** Cron jobs lack feedback loops and fail to reconcile drift in real time; use in-cluster native reconciliation operators.\n\u2022 **Layer Configuration Hierarchically:** Separate immutable platform primitives from tenant-specific AI workloads to avoid monolithic repository bottlenecks.\n\u2022 **Automate Health Gates Between Waves:** Never push cluster configuration fleet-wide simultaneously; validate synthetic AI benchmark jobs on canary clusters first.\n\u2022 **Empower Tenants with Self-Service Guardrails:** Give AI research squads git-based autonomy over their namespaces while enforcing cluster-wide security policies.", "word_count": 898, "has_transcript": true}, {"session_id": "JHJoZ_E2e88", "title": "Code, Containers, and Clusters: The Next Chapter of Apple's Container Framework", "category": "Storage Bottlenecks & Cloud Native Data Architecture", "topic": "Storage Bottlenecks & Cloud Native Data Architecture", "type": "Keynote", "video_id": "JHJoZ_E2e88", "recording_link": "https://www.youtube.com/watch?v=JHJoZ_E2e88", "speaker": "Kathryn Baldauf & Vince Prignano", "company": "Apple", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "Run Linux containers on macOS. Build with Apple silicon. Deploy at scale.", "technical_depth": "Kathryn Baldauf & Vince Prignano (Apple) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nLast year at KubeCon, we introduced Apple\u00e2\u0080\u0099s open source container framework. We kept building.\n\nContainer Machine: The newest addition to the framework brings new functionality to Apple silicon. Container machines provide a highly integrated Linux environment that works seamlessly on your Mac. It\u00e2\u0080\u0099s fast, lightweight, and persistent.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 1681, "has_transcript": true}, {"session_id": "NaeAXw80cmA", "title": "One Kubernetes, Different Environments: Closing the Portability Gaps", "category": "Storage Bottlenecks & Cloud Native Data Architecture", "topic": "Storage Bottlenecks & Cloud Native Data Architecture", "type": "Keynote", "video_id": "NaeAXw80cmA", "recording_link": "https://www.youtube.com/watch?v=NaeAXw80cmA", "speaker": "Dilpreet Bindra", "company": "Broadcom", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "What does portability really mean when Kubernetes spans containers, virtual machines, and increasingly diverse infrastructure? This keynote will discuss how VM API and the Workload Conformance Working Group are tackling different sides of that challenge and building more consistent infrastructure APIs and workload expectations across the Kubernetes ecosystem.", "technical_depth": "Dilpreet Bindra (Broadcom) presents operational insights and architectural breakthroughs delivered live at KubeCon:\n\nWhat does portability really mean when Kubernetes spans containers, virtual machines, and increasingly diverse infrastructure? This keynote will discuss how VM API and the Workload Conformance Working Group are tackling different sides of that challenge and building more consistent infrastructure APIs and workload expectations across the Kubernetes ecosystem.\n\nThe presentation emphasizes open standards, empirical verification, and robust operational control loops for modern cloud native infrastructure.", "takeaways": "\u2022 **Standardize on Declarative APIs:** Leverage Kubernetes Custom Resource Definitions (CRDs) and open specifications to avoid proprietary infrastructure silos.\n\u2022 **Design for Resilient Failure Domains:** Isolate critical components and enforce explicit resource quotas to protect against systemic cascade failures.\n\u2022 **Codify Platform Best Practices:** Bridge developer ergonomics with automated infrastructure guardrails to maximize velocity without sacrificing cluster reliability.", "word_count": 598, "has_transcript": true}, {"session_id": "fz41hTeNtKg", "title": "The Storage Bottleneck AI Didn't See Coming: Inside StepFun\u00e2\u0080\u0099s Multimodal Production Stack", "category": "Storage Bottlenecks & Cloud Native Data Architecture", "topic": "Storage Bottlenecks & Cloud Native Data Architecture", "type": "Keynote", "video_id": "fz41hTeNtKg", "recording_link": "https://www.youtube.com/watch?v=fz41hTeNtKg", "speaker": "Joe Zhou, Juicedata Inc. & Frank Li, StepFun", "company": "Cloud Native Ecosystem", "conference": "KubeCon + CloudNativeCon NA 2026", "premise": "In multimodal AI training (video, high-resolution imagery, audio), GPU compute utilization is notoriously bottlenecked by storage I/O. Standard distributed file systems suffer from metadata contention, small-file latency penalties, and network switch saturation, causing expensive H100 clusters to sit idle waiting for training data.", "technical_depth": "Joe Zhou (Juicedata) and Frank Li (StepFun) dissect the storage architecture powering StepFun's multimodal production models:\n1. The Small-File Multimodal Bottleneck: Millions of short audio clips and video frames overwhelm centralized storage metadata servers, creating severe I/O bottlenecks during distributed DataLoader shuffling.\n2. Distributed Tiered Caching with JuiceFS: Implementing a decoupled storage architecture: metadata stored in high-performance transactional key-value engines (Redis/TiKV), data stored in cloud object storage, and hot data cached locally on worker NVMe SSDs via JuiceFS.\n3. Kernel FUSE Optimization: Tuning Linux page cache, readahead buffers, and zero-copy userland FUSE bindings to saturate node PCI-e and NVMe throughput.\n4. Eliminating DataLoader Stragglers: Utilizing peer-to-peer cache sharing across Kubernetes worker nodes to prevent duplicate cross-rack network downloads of identical dataset shards.", "takeaways": "\u2022 **Decouple Metadata from Data Storage:** Multimodal training metadata requires microsecond transactional key-value performance, whereas bulk data belongs on cheap object storage.\n\u2022 **Saturate Local NVMe Caches First:** Never stream raw training data over cross-datacenter networks during epochs; pre-warm local worker node SSD caches.\n\u2022 **Tune Kernel FUSE Settings:** Standard FUSE defaults throttle throughput; enable kernel writeback caching and multithreaded FUSE daemons.\n\u2022 **Monitor GPU I/O Wait Percentage:** High GPU utilization is an illusion if compute engines spend 30% of cycles stalled in `iowait`.", "word_count": 598, "has_transcript": true}];
+
+    let selectedTopic = null; // null represents Home/Overview view
+    let searchQuery = '';
+
+    const ORDERED_TRACKS = [
+      "Agentic AI, Agent Substrate & LLM Runtimes",
+      "Cluster Engineering, Massive Scale & GPU Orchestration",
+      "AI Security, Sandboxing & Identity Governance",
+      "Storage Bottlenecks & Cloud Native Data Architecture",
+      "GitOps, Platform Engineering & Production Scale",
+      "Community, Open Source Governance & Keynote Addresses"
+    ];
+
+    const TRACK_ICONS = {
+      "Agentic AI, Agent Substrate & LLM Runtimes": "🤖",
+      "Cluster Engineering, Massive Scale & GPU Orchestration": "⚡",
+      "AI Security, Sandboxing & Identity Governance": "🔒",
+      "Storage Bottlenecks & Cloud Native Data Architecture": "💾",
+      "GitOps, Platform Engineering & Production Scale": "🚀",
+      "Community, Open Source Governance & Keynote Addresses": "👥"
+    };
+
+    const TRACK_DESCRIPTIONS = {
+      "Agentic AI, Agent Substrate & LLM Runtimes": "Agent Substrate specifications, open layers for sub-second agent lifecycles, RL on Kubernetes with OpenRL, and multi-modal computer-use agent scaling.",
+      "Cluster Engineering, Massive Scale & GPU Orchestration": "Engineering 100K-node clusters, lazy container image loading with SOCI, topology-aware GPU scheduling, and Kubeflow graduation.",
+      "AI Security, Sandboxing & Identity Governance": "Multi-layered container sandboxing, UserNS, Kata microVMs, SPIFFE/SPIRE agent workload identities, and sovereign AI traffic proxies.",
+      "Storage Bottlenecks & Cloud Native Data Architecture": "Solving multimodal training storage bottlenecks, tiered NVMe caching with JuiceFS, Apple container framework evolution, and cross-cloud portability.",
+      "GitOps, Platform Engineering & Production Scale": "Replacing brittle Terraform on cron with declarative in-cluster GitOps at Meta, Uber-scale deployments, Heroku developer ergonomics at Salesforce scale.",
+      "Community, Open Source Governance & Keynote Addresses": "Keynote addresses from Linux Foundation and CNCF leadership, celebrating open source maintainers, end-user feedback loops, and sovereign AI."
+    };
+
+    function getFilteredTalks() {
+      return ALL_TALKS.filter(t => {
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          const matchTitle = t.title && t.title.toLowerCase().includes(q);
+          const matchSpeaker = t.speaker && t.speaker.toLowerCase().includes(q);
+          const matchCompany = t.company && t.company.toLowerCase().includes(q);
+          const matchPremise = t.premise && t.premise.toLowerCase().includes(q);
+          const matchDepth = t.technical_depth && t.technical_depth.toLowerCase().includes(q);
+          const matchTake = t.takeaways && t.takeaways.toLowerCase().includes(q);
+          if (!(matchTitle || matchSpeaker || matchCompany || matchPremise || matchDepth || matchTake)) return false;
+        }
+        return true;
+      });
+    }
+
+    function renderSidebarTopics() {
+      const topicListEl = document.getElementById('topicList');
+      topicListEl.innerHTML = '';
+
+      const filtered = getFilteredTalks();
+      const counts = {};
+      ORDERED_TRACKS.forEach(tr => counts[tr] = 0);
+      filtered.forEach(t => {
+        if (counts[t.topic] !== undefined) counts[t.topic]++;
+      });
+
+      ORDERED_TRACKS.forEach(topic => {
+        const count = counts[topic] || 0;
+        const icon = TRACK_ICONS[topic] || "📌";
+
+        const div = document.createElement('div');
+        div.className = `topic-item ${selectedTopic === topic ? 'active' : ''}`;
+        div.onclick = () => selectTopic(topic);
+        div.innerHTML = `
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span>${icon}</span>
+            <span>${topic}</span>
+          </div>
+          <span class="topic-badge">${count}</span>
+        `;
+        topicListEl.appendChild(div);
+      });
+
+      const btnHome = document.getElementById('btnHome');
+      if (btnHome) btnHome.classList.toggle('active', selectedTopic === null);
+    }
+
+    function selectHome() {
+      selectedTopic = null;
+      renderSidebarTopics();
+      renderHome();
+      window.location.hash = '#home';
+      switchToMainViewOnMobile();
+    }
+
+    function selectTopic(topic) {
+      selectedTopic = topic;
+      renderSidebarTopics();
+      renderTopicView();
+      window.location.hash = `#track=${encodeURIComponent(topic)}`;
+      switchToMainViewOnMobile();
+    }
+
+    function onSearchChange() {
+      searchQuery = document.getElementById('searchInput').value.trim();
+      renderSidebarTopics();
+      if (selectedTopic === null) {
+        renderHome();
+      } else {
+        renderTopicView();
+      }
+    }
+
+    function switchToMainViewOnMobile() {
+      if (window.innerWidth <= 820) {
+        document.body.classList.add('mobile-view-main');
+        window.scrollTo(0, 0);
+        const main = document.getElementById('main');
+        if (main) main.scrollTop = 0;
+      }
+    }
+
+    function switchToSidebarView() {
+      document.body.classList.remove('mobile-view-main');
+      window.scrollTo(0, 0);
+    }
+
+    function navigateToHomeMobile() {
+      selectHome();
+    }
+
+    function renderHome() {
+      const main = document.getElementById('main');
+      const filtered = getFilteredTalks();
+
+      main.innerHTML = `
+        <div class="mobile-browse-btn-row">
+          <button class="mobile-browse-tracks-btn" onclick="switchToSidebarView()">
+            <span>📋</span> Browse 6 Keynote Tracks (${filtered.length} Talks)
+          </button>
+        </div>
+
+        <div class="hero-banner">
+          <span class="hero-badge">☸️ Cloud Native Computing Foundation</span>
+          <h1 class="hero-title">KubeCon + CloudNativeCon NA 2026: Keynote Systems Synthesis</h1>
+          <p class="hero-subtitle">
+            An empirical, zero-boilerplate systems architecture synthesis of all <strong>35 keynote sessions</strong> delivered live at KubeCon NA 2026, synthesized from official CNCF video recordings, presentations, and spoken technical transcripts.
+          </p>
+
+          <div class="hero-stats">
+            <div class="stat-card">
+              <div class="stat-number">${filtered.length}</div>
+              <div class="stat-lbl">Keynote Sessions</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">43K+</div>
+              <div class="stat-lbl">Words of Spoken Telemetry</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">40+</div>
+              <div class="stat-lbl">Principal Cloud Leaders</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">100%</div>
+              <div class="stat-lbl">Video Recordings Available</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="notice-card">
+          <strong>📢 Continuous Playlist Populator Active:</strong> Keynotes and opening platform presentations are fully published and summarized with complete technical depth. As CNCF uploads and populates the breakout sessions, this portal will automatically expand to incorporate all conference track recordings.
+        </div>
+
+        <h2 style="font-size: 18px; font-weight: 800; color: #fff; margin: 0 0 14px;">
+          Explore Keynote Architectural Tracks
+        </h2>
+        <div class="topic-directory-grid">
+          ${ORDERED_TRACKS.map(tr => {
+            const c = filtered.filter(t => t.topic === tr).length;
+            const icon = TRACK_ICONS[tr] || "📌";
+            return `
+              <div class="dir-card" onclick="selectTopic('${tr}')">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span>${icon}</span>
+                  <span class="dir-card-name">${tr}</span>
+                </div>
+                <span class="dir-card-badge">${c}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        <h2 style="font-size: 18px; font-weight: 800; color: #fff; margin: 0 0 16px;">
+          The 6 Core Cloud Native & AI Infrastructure Pillars from KubeCon 2026
+        </h2>
+        <div class="pillars-grid">
+          <div class="pillar-card">
+            <div class="pillar-header">
+              <span class="pillar-icon">🤖</span>
+              <h3 class="pillar-title">1. Agent Substrate: Decoupling Pod Lifecycles for Sub-Second Agents</h3>
+            </div>
+            <p class="pillar-text">
+              Kubernetes was designed for long-running stateless microservices; autonomous multi-agent workloads require sub-100ms task creation, shared in-memory context, and instant sandbox teardown. Google, Anthropic, and Solo.io's new open specification introduces warm execution pools and local shared-memory IPC, enabling clusters to run millions of concurrent agents without kubelet scheduling bottlenecks.
+            </p>
+            <div class="pillar-highlights">
+              <ul>
+                <li>Pre-warmed worker pools replace slow container image pulls for fleeting subtasks.</li>
+                <li>Zero-copy kernel-level shared memory eliminates inter-agent HTTP serialization latency.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-header">
+              <span class="pillar-icon">⚡</span>
+              <h3 class="pillar-title">2. Extreme-Scale Engineering: Lazy Loading & Topology-Aware GPUs</h3>
+            </div>
+            <p class="pillar-text">
+              AI images exceeding 50 GB and 100K-node clusters require rewriting container runtime assumptions. AWS demonstrates how lazy image streaming (SOCI / eStargz) drops container startup from 15 minutes to under 10 seconds. Meanwhile, network-topology-aware schedulers place tightly coupled multi-GPU training jobs strictly within minimal switch latency domains.
+            </p>
+            <div class="pillar-highlights">
+              <ul>
+                <li>Lazy-loading Seekable OCI (SOCI) container images executes PyTorch pods in seconds.</li>
+                <li>Topology-aware placement prevents 40% GPU all-reduce throughput degradation.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-header">
+              <span class="pillar-icon">🔒</span>
+              <h3 class="pillar-title">3. Multi-Layer Sandboxing & Ephemeral Zero-Trust Agent Identities</h3>
+            </div>
+            <p class="pillar-text">
+              Giving LLM agents raw terminal access inside standard cgroup containers invites prompt-injection privilege escalations and cluster token exfiltration. Red Hat and Google Cloud mandate microVM-level hardware isolation (Kata/gVisor), strict egress gateways blocking link-local metadata (169.254.169.254), and ephemeral SPIFFE/SPIRE token chaining tying agent mutations cryptographically to human users.
+            </p>
+            <div class="pillar-highlights">
+              <ul>
+                <li>Hardware-enforced microVM sandboxing stops Linux kernel exploits from untrusted agent code.</li>
+                <li>Ephemeral SPIFFE identities preserve full non-repudiation in API server audit trails.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-header">
+              <span class="pillar-icon">💾</span>
+              <h3 class="pillar-title">4. Multimodal Storage Bottlenecks & Tiered NVMe Caching</h3>
+            </div>
+            <p class="pillar-text">
+              In multimodal AI training (video, high-res image, audio), expensive GPU clusters routinely stall in I/O wait due to metadata contention over millions of small files. Juicedata and StepFun prove that separating transactional metadata (Redis/TiKV) from bulk object storage and caching hot datasets on local worker NVMe SSDs eliminates DataLoader network bottlenecks.
+            </p>
+            <div class="pillar-highlights">
+              <ul>
+                <li>Tiered caching saturates local PCI-e NVMe drives and eliminates cross-rack data fetches.</li>
+                <li>Kernel FUSE tuning with writeback caching maximizes streaming read throughput.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-header">
+              <span class="pillar-icon">🚀</span>
+              <h3 class="pillar-title">5. Declarative In-Cluster GitOps Over Brittle Terraform Cron</h3>
+            </div>
+            <p class="pillar-text">
+              Operating ~100 Kubernetes clusters across massive AI research fleets at Meta was previously managed via scheduled Terraform cron jobs, which suffered from API throttling and silent configuration drift. Migrating to native in-cluster GitOps controllers provides continuous real-time reconciliation, layered configuration overlays, and automated canary health gates.
+            </p>
+            <div class="pillar-highlights">
+              <ul>
+                <li>Native in-cluster reconciliation operators continuously correct live configuration drift.</li>
+                <li>Wave-based canary rollouts validate synthetic GPU benchmark jobs before promoting fleet-wide.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-header">
+              <span class="pillar-icon">🌐</span>
+              <h3 class="pillar-title">6. The AI Gateway as the New Runtime Harness</h3>
+            </div>
+            <p class="pillar-text">
+              The fundamental unit of cloud native deployment has evolved beyond the container into 'The Harness' (Solo.io, Microsoft). Extending L7 service meshes into intelligent AI Gateways centralizes semantic embedding caching, prompt PII redaction, Model Context Protocol (MCP) tool discovery, and dynamic model failover routing directly at the ingress perimeter.
+            </p>
+            <div class="pillar-highlights">
+              <ul>
+                <li>Semantic caching at the gateway cuts inference token costs and latency by over 50%.</li>
+                <li>Standardize internal cluster service discovery for agents via declarative MCP schemas.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTopicView() {
+      const main = document.getElementById('main');
+      const filtered = getFilteredTalks().filter(t => t.topic === selectedTopic);
+      const icon = TRACK_ICONS[selectedTopic] || "📌";
+      const desc = TRACK_DESCRIPTIONS[selectedTopic] || "";
+
+      let html = `
+        <div class="header-bar">
+          <div>
+            <h1 class="topic-heading">${icon} ${selectedTopic}</h1>
+            <p class="topic-desc">${desc}</p>
+          </div>
+          <div class="stats-pill">${filtered.length} Keynote Sessions</div>
+        </div>
+      `;
+
+      if (filtered.length === 0) {
+        html += `
+          <div style="text-align:center; padding: 60px 20px; color: var(--muted);">
+            <div style="font-size:32px; margin-bottom:12px;">🔍</div>
+            <h3 style="color:#fff; margin-bottom:6px;">No keynotes found matching filters</h3>
+            <p>Try clearing your search query or switching tracks.</p>
+          </div>
+        `;
+      } else {
+        filtered.forEach(talk => {
+          html += `
+            <div class="talk-card" id="talk-${talk.session_id}">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">${talk.title}</h3>
+                  <div class="card-meta">
+                    <span class="badge badge-keynote">☸️ Keynote</span>
+                    <span class="badge badge-cat">${talk.topic}</span>
+                    ${talk.word_count > 0 ? `<span class="badge badge-words">${talk.word_count.toLocaleString()} words spoken</span>` : ''}
+                    <span>🎤 <strong>${talk.speaker}</strong></span>
+                    <span>🏢 ${talk.company}</span>
+                  </div>
+                </div>
+                <div class="card-actions">
+                  <a href="${talk.recording_link}" target="_blank" rel="noopener noreferrer" class="video-btn">
+                    <span>▶ Watch Keynote</span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="section-block">
+                  <div class="section-label label-premise">
+                    <span>🎯</span> 1. Technical Premise & Problem Statement
+                  </div>
+                  <div class="section-text">${talk.premise}</div>
+                </div>
+
+                <div class="section-block">
+                  <div class="section-label label-arch">
+                    <span>⚙️</span> 2. Architecture & Operational Analysis
+                  </div>
+                  <div class="section-text">${talk.technical_depth}</div>
+                </div>
+
+                <div class="section-block">
+                  <div class="section-label label-take">
+                    <span>🛡️</span> 3. Core Cloud Native Takeaways & Platform Rules
+                  </div>
+                  <div class="section-text">${talk.takeaways}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      main.innerHTML = html;
+      main.scrollTop = 0;
+    }
+
+    // Hash navigation routing
+    window.addEventListener('load', () => {
+      const hash = window.location.hash;
+      if (hash.startsWith('#track=')) {
+        const tr = decodeURIComponent(hash.replace('#track=', ''));
+        if (ORDERED_TRACKS.includes(tr)) {
+          selectTopic(tr);
+          return;
+        }
+      }
+      selectHome();
+    });
+
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash;
+      if (hash === '#home' || !hash) {
+        if (selectedTopic !== null) selectHome();
+      } else if (hash.startsWith('#track=')) {
+        const tr = decodeURIComponent(hash.replace('#track=', ''));
+        if (ORDERED_TRACKS.includes(tr) && selectedTopic !== tr) {
+          selectTopic(tr);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
